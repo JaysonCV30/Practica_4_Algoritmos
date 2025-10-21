@@ -75,4 +75,12 @@ public class ListaCircularDoble<T> {
         } while (actual != inicio);
         System.out.println();
     }
+
+    public NodoDoble<T> getInicio() {
+        return inicio;
+    }
+
+    public NodoDoble<T> getFin() {
+        return fin;
+    }
 }
