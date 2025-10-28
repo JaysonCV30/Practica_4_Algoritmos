@@ -16,6 +16,10 @@ public class Lista<T> {
             fin = nuevo;
         }
     }
+    
+    public Nodo<T> getInicio(){
+        return inicio;
+    }
 
     public void insertaFinal(T dato) {
         Nodo<T> nuevo = new Nodo<>(dato, null);
