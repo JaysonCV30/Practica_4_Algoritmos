@@ -33,7 +33,7 @@ public class Carta implements Comparable<Carta> {
 
     public String getNombre() {
         return switch (valor) {
-            case 1 -> "A";
+            case 1 -> "As";
             case 11 -> "J";
             case 12 -> "Q";
             case 13 -> "K";
