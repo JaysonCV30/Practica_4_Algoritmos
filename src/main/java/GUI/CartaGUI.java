@@ -1,21 +1,28 @@
 package GUI;
 
 import Logica.Carta;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class CartaGUI extends StackPane {
 
     private Carta carta;
     private ImageView imagen;
     private Rectangle borde;
+    private int origenIndex;
+    private EightOffGameGUI controlador;
+    private boolean seleccionada;
 
-    public CartaGUI(Carta carta) {
+    public CartaGUI(Carta carta, int origenIndex, EightOffGameGUI controlador) {
         this.carta = carta;
 
-        // Cargar imagen según nombre
         String nombreArchivo = generarNombreImagen(carta);
         var url = getClass().getResource("/cartas/" + nombreArchivo + ".png");
 
@@ -28,18 +35,17 @@ public class CartaGUI extends StackPane {
             imagen.setOpacity(0.2);   // visualmente tenue
         }
 
-        imagen.setFitWidth(100);
-        imagen.setFitHeight(130);
+        imagen.setFitWidth(90);
+        imagen.setFitHeight(120);
 
-        // Borde para selección visual
-        borde = new Rectangle(90, 120);
-        borde.setArcWidth(10);
-        borde.setArcHeight(10);
-        borde.setFill(null);
-        borde.setStrokeWidth(2);
-        borde.setStroke(null); // sin borde por defecto
-
-        getChildren().addAll(imagen, borde);
+        getChildren().addAll(imagen);
+        setOnMouseClicked(e -> {
+            if (controlador.hayCartaSeleccionada()) {
+                controlador.intentarMoverA(origenIndex);
+            } else {
+                controlador.seleccionarCarta(carta, origenIndex, this);
+            }
+        });
     }
 
     private String generarNombreImagen(Carta carta) {
@@ -74,8 +80,33 @@ public class CartaGUI extends StackPane {
         return carta;
     }
 
-    public void seleccionar() {
-        borde.setStroke(javafx.scene.paint.Color.BLUE);
+    public void seleccionar(boolean sel) {
+        seleccionada = sel;
+        if (seleccionada) {
+            setEffect(new DropShadow(20, Color.BLUE));
+        } else {
+            setEffect(null);
+        }
+    }
+
+    public void animarSeleccion() {
+        ScaleTransition resaltar = new ScaleTransition(Duration.millis(150), this);
+        resaltar.setFromX(1.0);
+        resaltar.setToX(1.1);
+        resaltar.setFromY(1.0);
+        resaltar.setToY(1.1);
+        resaltar.setAutoReverse(true);
+        resaltar.setCycleCount(2);
+        resaltar.play();
+    }
+
+    public void temblar() {
+        TranslateTransition shake = new TranslateTransition(Duration.millis(100), this);
+        shake.setFromX(-5);
+        shake.setToX(5);
+        shake.setCycleCount(4);
+        shake.setAutoReverse(true);
+        shake.play();
     }
 
     public void deseleccionar() {

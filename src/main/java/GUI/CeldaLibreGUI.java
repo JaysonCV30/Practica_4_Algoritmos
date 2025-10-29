@@ -11,9 +11,11 @@ public class CeldaLibreGUI extends HBox {
 
     private CeldaLibre celdas;
     private ArrayList<CartaGUI> cartasGraficas;
+    private EightOffGameGUI controlador;
 
-    public CeldaLibreGUI(CeldaLibre celdas) {
+    public CeldaLibreGUI(CeldaLibre celdas, EightOffGameGUI controlador) {
         this.celdas = celdas;
+        this.controlador = controlador;
         this.cartasGraficas = new ArrayList<>();
         setSpacing(10); // separación entre cartas
         actualizar();
@@ -24,16 +26,18 @@ public class CeldaLibreGUI extends HBox {
         cartasGraficas.clear();
 
         Carta[] cartas = obtenerCartas();
-        for (Carta carta : cartas) {
-            CartaGUI cartaGUI = new CartaGUI(carta);
+        for (int i = 0; i < cartas.length; i++) {
+            Carta carta = cartas[i];
+            CartaGUI cartaGUI = new CartaGUI(carta, i + 8, controlador);
             cartasGraficas.add(cartaGUI);
             getChildren().add(cartaGUI);
         }
 
         // Si hay menos de 8 cartas, mostrar espacios vacíos
-        int espaciosRestantes = 8 - cartas.length;
-        for (int i = 0; i < espaciosRestantes; i++) {
+        for (int i = cartas.length; i < 8; i++) {
             StackPane espacioVacio = crearEspacioVacioVisual();
+            final int destino = i + 8;
+            espacioVacio.setOnMouseClicked(e -> controlador.intentarMoverA(destino));
             getChildren().add(espacioVacio);
         }
     }
@@ -48,13 +52,6 @@ public class CeldaLibreGUI extends HBox {
         return lista.toArray(new Carta[0]);
     }
 
-    private CartaGUI crearEspacioVacio() {
-        CartaGUI vacio = new CartaGUI(new Carta(0, Carta.Palo.TREBOL)); // carta dummy
-        vacio.setOpacity(0.2); // visualmente tenue
-        vacio.setMouseTransparent(true); // no interactuable
-        return vacio;
-    }
-
     public CeldaLibre getCeldaLibre() {
         return celdas;
     }
@@ -67,7 +64,7 @@ public class CeldaLibreGUI extends HBox {
     }
 
     private StackPane crearEspacioVacioVisual() {
-        Rectangle fondo = new Rectangle(100, 130);
+        Rectangle fondo = new Rectangle(90, 120);
         fondo.setArcWidth(10);
         fondo.setArcHeight(10);
         fondo.setFill(javafx.scene.paint.Color.LIGHTGRAY.deriveColor(0, 1, 1, 0.3));
@@ -75,7 +72,6 @@ public class CeldaLibreGUI extends HBox {
         fondo.setStrokeWidth(1.5);
 
         StackPane espacio = new StackPane(fondo);
-        espacio.setMouseTransparent(true);
         return espacio;
     }
 }

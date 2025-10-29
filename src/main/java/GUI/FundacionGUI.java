@@ -10,10 +10,16 @@ public class FundacionGUI extends StackPane {
 
     private Fundacion fundacion;
     private ArrayList<CartaGUI> cartasGraficas;
+    private int indiceFundacion;
+    private EightOffGameGUI controlador;
 
-    public FundacionGUI(Fundacion fundacion) {
+    public FundacionGUI(Fundacion fundacion, int indiceFundacion, EightOffGameGUI controlador) {
         this.fundacion = fundacion;
+        this.indiceFundacion = indiceFundacion;
+        this.controlador = controlador;
         this.cartasGraficas = new ArrayList<>();
+
+        setOnMouseClicked(e -> controlador.intentarMoverA(indiceFundacion + 16));
         actualizar();
     }
 
@@ -23,14 +29,13 @@ public class FundacionGUI extends StackPane {
 
         Carta[] cartas = obtenerCartas();
         for (Carta carta : cartas) {
-            CartaGUI cartaGUI = new CartaGUI(carta);
+            CartaGUI cartaGUI = new CartaGUI(carta, indiceFundacion + 16, controlador);
             cartasGraficas.add(cartaGUI);
         }
 
         if (!cartasGraficas.isEmpty()) {
             getChildren().add(cartasGraficas.get(cartasGraficas.size() - 1)); // solo mostrar la última
         } else {
-            //CartaGUI vacio = crearEspacioVacio();
             getChildren().add(crearEspacioVacioVisual());
         }
     }
@@ -46,7 +51,7 @@ public class FundacionGUI extends StackPane {
     }
 
     private StackPane crearEspacioVacioVisual() {
-        Rectangle fondo = new Rectangle(100, 130);
+        Rectangle fondo = new Rectangle(90, 120);
         fondo.setArcWidth(10);
         fondo.setArcHeight(10);
         fondo.setFill(javafx.scene.paint.Color.LIGHTGRAY.deriveColor(0, 1, 1, 0.3));

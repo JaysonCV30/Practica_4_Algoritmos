@@ -12,7 +12,7 @@ public class Juego extends Application {
         EightOffGame juego = new EightOffGame();
         EightOffGameGUI vista = new EightOffGameGUI(juego);
 
-        Scene scene = new Scene(vista, 950, 900);
+        Scene scene = new Scene(vista, 920, 950);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Eight Off - Práctica 4");
         primaryStage.show();

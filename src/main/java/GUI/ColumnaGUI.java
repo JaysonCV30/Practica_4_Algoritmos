@@ -10,11 +10,17 @@ public class ColumnaGUI extends VBox {
 
     private Columna columna;
     private ArrayList<CartaGUI> cartasGraficas;
+    private int indiceColumna;
+    private EightOffGameGUI controlador;
 
-    public ColumnaGUI(Columna columna) {
+    public ColumnaGUI(Columna columna, int indiceColumna, EightOffGameGUI controlador) {
         this.columna = columna;
+        this.indiceColumna = indiceColumna;
+        this.controlador = controlador;
         this.cartasGraficas = new ArrayList<>();
-        setSpacing(-80); // superposición vertical para efecto de pila
+
+        setSpacing(-80);
+        setOnMouseClicked(e -> controlador.intentarMoverA(indiceColumna));
         actualizar();
     }
 
@@ -28,7 +34,7 @@ public class ColumnaGUI extends VBox {
             getChildren().add(crearEspacioVacioVisual());
         } else {
             for (Carta carta : cartas) {
-                CartaGUI cartaGUI = new CartaGUI(carta);
+                CartaGUI cartaGUI = new CartaGUI(carta, indiceColumna, controlador);
                 cartasGraficas.add(cartaGUI);
                 getChildren().add(cartaGUI);
             }
@@ -59,19 +65,19 @@ public class ColumnaGUI extends VBox {
     public void seleccionarUltimaCarta() {
         CartaGUI ultima = getUltimaCartaGUI();
         if (ultima != null) {
-            ultima.seleccionar();
+            ultima.seleccionar(true);
         }
     }
 
     public void deseleccionarUltimaCarta() {
         CartaGUI ultima = getUltimaCartaGUI();
         if (ultima != null) {
-            ultima.deseleccionar();
+            ultima.seleccionar(false);
         }
     }
 
     private StackPane crearEspacioVacioVisual() {
-        javafx.scene.shape.Rectangle fondo = new javafx.scene.shape.Rectangle(100, 130);
+        javafx.scene.shape.Rectangle fondo = new javafx.scene.shape.Rectangle(90, 120);
         fondo.setArcWidth(10);
         fondo.setArcHeight(10);
         fondo.setFill(javafx.scene.paint.Color.LIGHTGRAY.deriveColor(0, 1, 1, 0.3));

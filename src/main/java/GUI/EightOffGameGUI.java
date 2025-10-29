@@ -8,11 +8,15 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class EightOffGameGUI extends BorderPane {
+
     private EightOffGame juego;
     private ColumnaGUI[] columnasGUI;
     private CeldaLibreGUI celdaLibreGUI;
     private FundacionGUI[] fundacionesGUI;
     private Label mensajeEstado;
+    private Carta cartaSeleccionada = null;
+    private int origenSeleccionado = -1; // índice entre 0 y 19
+    private CartaGUI cartaGUISeleccionada;
 
     public EightOffGameGUI(EightOffGame juego) {
         this.juego = juego;
@@ -34,7 +38,7 @@ public class EightOffGameGUI extends BorderPane {
         VBox centro = new VBox(20);
         centro.setPadding(new Insets(10));
 
-        celdaLibreGUI = new CeldaLibreGUI(juego.getCeldas());
+        celdaLibreGUI = new CeldaLibreGUI(juego.getCeldas(), this);
         HBox celdasBox = new HBox(10, celdaLibreGUI);
         celdasBox.setPadding(new Insets(10));
 
@@ -42,7 +46,7 @@ public class EightOffGameGUI extends BorderPane {
         columnasGUI = new ColumnaGUI[8];
         HBox columnasBox = new HBox(10);
         for (int i = 0; i < 8; i++) {
-            columnasGUI[i] = new ColumnaGUI(juego.getColumnas()[i]);
+            columnasGUI[i] = new ColumnaGUI(juego.getColumnas()[i], i, this);
             columnasBox.getChildren().add(columnasGUI[i]);
         }
         columnasBox.setPadding(new Insets(10));
@@ -54,7 +58,7 @@ public class EightOffGameGUI extends BorderPane {
         fundacionesGUI = new FundacionGUI[4];
         HBox fundacionesBox = new HBox(20);
         for (int i = 0; i < 4; i++) {
-            fundacionesGUI[i] = new FundacionGUI(juego.getFundaciones()[i]);
+            fundacionesGUI[i] = new FundacionGUI(juego.getFundaciones()[i], i, this);
             fundacionesBox.getChildren().add(fundacionesGUI[i]);
         }
         fundacionesBox.setPadding(new Insets(10));
@@ -78,12 +82,70 @@ public class EightOffGameGUI extends BorderPane {
     }
 
     public void actualizarTodo() {
-        for (ColumnaGUI colGUI : columnasGUI) colGUI.actualizar();
-        for (FundacionGUI fundGUI : fundacionesGUI) fundGUI.actualizar();
+        for (ColumnaGUI colGUI : columnasGUI) {
+            colGUI.actualizar();
+        }
+        for (FundacionGUI fundGUI : fundacionesGUI) {
+            fundGUI.actualizar();
+        }
         celdaLibreGUI.actualizar();
 
         if (juego.juegoTerminado()) {
             mensajeEstado.setText("¡Juego terminado! Has ganado.");
         }
+    }
+
+    public void seleccionarCarta(Carta carta, int origen, CartaGUI cartaGUI) {
+        // Deseleccionar la anterior
+        if (cartaGUISeleccionada != null) {
+            cartaGUISeleccionada.seleccionar(false);
+        }
+
+        // Guardar nueva
+        this.cartaSeleccionada = carta;
+        this.origenSeleccionado = origen;
+        this.cartaGUISeleccionada = cartaGUI;
+
+        cartaGUISeleccionada.seleccionar(true);
+        cartaGUISeleccionada.animarSeleccion();
+        mensajeEstado.setText("Carta seleccionada: " + carta);
+    }
+
+    public void intentarMoverA(int destino) {
+        if (cartaSeleccionada == null || cartaGUISeleccionada == null) {
+            return;
+        }
+
+        if (destino == origenSeleccionado) {
+            mensajeEstado.setText("Selecciona una pila diferente para mover la carta.");
+            return;
+        }
+
+        boolean exito = false;
+
+        if (origenSeleccionado >= 0 && origenSeleccionado < 8) {
+            exito = juego.moverCartaDesdeColumna(destino, cartaSeleccionada);
+        } else if (origenSeleccionado >= 8 && origenSeleccionado < 16) {
+            exito = juego.moverCartaDesdeCelda(destino, cartaSeleccionada);
+        } else if (origenSeleccionado >= 16 && origenSeleccionado < 20) {
+            exito = juego.moverCartaDesdeFundacion(destino, cartaSeleccionada);
+        }
+
+        if (exito) {
+            mensajeEstado.setText("Movimiento realizado: " + cartaSeleccionada);
+            actualizarTodo();
+        } else {
+            mensajeEstado.setText("Movimiento inválido");
+            cartaGUISeleccionada.temblar();
+        }
+
+        cartaGUISeleccionada.seleccionar(false);
+        cartaSeleccionada = null;
+        cartaGUISeleccionada = null;
+        origenSeleccionado = -1;
+    }
+
+    public boolean hayCartaSeleccionada() {
+        return cartaSeleccionada != null && cartaGUISeleccionada != null;
     }
 }
