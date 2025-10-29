@@ -1,7 +1,7 @@
 package Logica;
 
-
 public class Fundacion {
+
     private Lista<Carta> cartas;
 
     public Fundacion() {
@@ -26,7 +26,9 @@ public class Fundacion {
 
     public Carta verTope() {
         Nodo<Carta> actual = cartas.getInicio();
-        if (actual == null) return null;
+        if (actual == null) {
+            return null;
+        }
 
         while (actual.getSig() != null) {
             actual = actual.getSig();
@@ -46,5 +48,25 @@ public class Fundacion {
 
     public Lista<Carta> getCartas() {
         return cartas;
+    }
+
+    public boolean puedeRecibir(Carta carta) {
+        Carta tope = verTope();
+        if (tope == null) {
+            return carta.getValor() == 1;
+        }
+        return carta.esSiguienteDe(tope);
+    }
+
+    public void agregarCarta(Carta carta) {
+        cartas.insertaFinal(carta);
+    }
+
+    public Carta retirarCima() {
+        Carta cima = verTope();
+        if (cima != null) {
+            cartas.eliminaFinal();
+        }
+        return cima;
     }
 }

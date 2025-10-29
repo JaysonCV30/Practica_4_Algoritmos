@@ -1,7 +1,7 @@
 package Logica;
 
-
 public class CeldaLibre {
+
     private Lista<Carta> celdas;
     private final int LIMITE = 8;
 
@@ -79,5 +79,9 @@ public class CeldaLibre {
 
     public Lista<Carta> getCeldas() {
         return celdas;
+    }
+
+    public boolean hayEspacio() {
+        return contarCartas() < LIMITE;
     }
 }

@@ -7,6 +7,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
 public class CartaGUI extends StackPane {
+
     private Carta carta;
     private ImageView imagen;
     private Rectangle borde;
@@ -16,13 +17,22 @@ public class CartaGUI extends StackPane {
 
         // Cargar imagen según nombre
         String nombreArchivo = generarNombreImagen(carta);
-        Image img = new Image("/resources/cartas/" + nombreArchivo + ".png");
-        imagen = new ImageView(img);
-        imagen.setFitWidth(70);
-        imagen.setFitHeight(100);
+        var url = getClass().getResource("/cartas/" + nombreArchivo + ".png");
+
+        if (url != null) {
+            Image img = new Image(url.toExternalForm());
+            imagen = new ImageView(img);
+        } else {
+            System.out.println("Imagen no encontrada: " + nombreArchivo);
+            imagen = new ImageView(); // imagen vacía
+            imagen.setOpacity(0.2);   // visualmente tenue
+        }
+
+        imagen.setFitWidth(100);
+        imagen.setFitHeight(130);
 
         // Borde para selección visual
-        borde = new Rectangle(70, 100);
+        borde = new Rectangle(90, 120);
         borde.setArcWidth(10);
         borde.setArcHeight(10);
         borde.setFill(null);
@@ -34,18 +44,27 @@ public class CartaGUI extends StackPane {
 
     private String generarNombreImagen(Carta carta) {
         String valor = switch (carta.getValor()) {
-            case 1 -> "A";
-            case 11 -> "J";
-            case 12 -> "Q";
-            case 13 -> "K";
-            default -> String.valueOf(carta.getValor());
+            case 1 ->
+                "As";
+            case 11 ->
+                "J";
+            case 12 ->
+                "Q";
+            case 13 ->
+                "K";
+            default ->
+                String.valueOf(carta.getValor());
         };
 
         String palo = switch (carta.getPalo()) {
-            case CORAZON -> "corazon_rojo";
-            case DIAMANTE -> "diamante_rojo";
-            case ESPADA -> "pica_negro";
-            case TREBOL -> "trebol_negro";
+            case CORAZON ->
+                "corazon_rojo";
+            case DIAMANTE ->
+                "diamante_rojo";
+            case PICA ->
+                "pica_negro";
+            case TREBOL ->
+                "trebol_negro";
         };
 
         return valor + "_" + palo;
@@ -65,6 +84,16 @@ public class CartaGUI extends StackPane {
 
     public void actualizarImagen() {
         String nombreArchivo = generarNombreImagen(carta);
-        imagen.setImage(new Image("/resources/cartas/" + nombreArchivo + ".png"));
+        var url = getClass().getResource("/cartas/" + nombreArchivo + ".png");
+
+        if (url != null) {
+            Image img = new Image(url.toExternalForm());
+            imagen.setImage(img);
+            imagen.setOpacity(1.0); // restaurar opacidad si antes estaba tenue
+        } else {
+            System.out.println("Imagen no encontrada al actualizar: " + nombreArchivo);
+            imagen.setImage(null);
+            imagen.setOpacity(0.2); // mostrar como espacio vacío
+        }
     }
 }

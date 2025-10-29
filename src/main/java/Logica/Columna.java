@@ -1,7 +1,7 @@
 package Logica;
 
-
 public class Columna {
+
     private Lista<Carta> cartas;
 
     public Columna() {
@@ -43,5 +43,13 @@ public class Columna {
 
     public Lista<Carta> getCartas() {
         return cartas;
+    }
+
+    public boolean puedeRecibir(Carta carta) {
+        Carta cima = verUltimaCarta();
+        if (cima == null) {
+            return true;
+        }
+        return carta.getValor() == cima.getValor() - 1 && carta.getPalo() == cima.getPalo();
     }
 }

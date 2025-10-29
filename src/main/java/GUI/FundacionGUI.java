@@ -1,0 +1,71 @@
+package GUI;
+
+import Logica.Carta;
+import Logica.Fundacion;
+import javafx.scene.layout.StackPane;
+import java.util.ArrayList;
+import javafx.scene.shape.Rectangle;
+
+public class FundacionGUI extends StackPane {
+
+    private Fundacion fundacion;
+    private ArrayList<CartaGUI> cartasGraficas;
+
+    public FundacionGUI(Fundacion fundacion) {
+        this.fundacion = fundacion;
+        this.cartasGraficas = new ArrayList<>();
+        actualizar();
+    }
+
+    public void actualizar() {
+        getChildren().clear();
+        cartasGraficas.clear();
+
+        Carta[] cartas = obtenerCartas();
+        for (Carta carta : cartas) {
+            CartaGUI cartaGUI = new CartaGUI(carta);
+            cartasGraficas.add(cartaGUI);
+        }
+
+        if (!cartasGraficas.isEmpty()) {
+            getChildren().add(cartasGraficas.get(cartasGraficas.size() - 1)); // solo mostrar la última
+        } else {
+            //CartaGUI vacio = crearEspacioVacio();
+            getChildren().add(crearEspacioVacioVisual());
+        }
+    }
+
+    private Carta[] obtenerCartas() {
+        ArrayList<Carta> lista = new ArrayList<>();
+        var actual = fundacion.getCartas().getInicio();
+        while (actual != null) {
+            lista.add(actual.getInfo());
+            actual = actual.getSig();
+        }
+        return lista.toArray(new Carta[0]);
+    }
+
+    private StackPane crearEspacioVacioVisual() {
+        Rectangle fondo = new Rectangle(100, 130);
+        fondo.setArcWidth(10);
+        fondo.setArcHeight(10);
+        fondo.setFill(javafx.scene.paint.Color.LIGHTGRAY.deriveColor(0, 1, 1, 0.3));
+        fondo.setStroke(javafx.scene.paint.Color.GRAY);
+        fondo.setStrokeWidth(1.5);
+
+        StackPane espacio = new StackPane(fondo);
+        espacio.setMouseTransparent(true);
+        return espacio;
+    }
+
+    public Fundacion getFundacion() {
+        return fundacion;
+    }
+
+    public CartaGUI getTopeGUI() {
+        if (cartasGraficas.isEmpty()) {
+            return null;
+        }
+        return cartasGraficas.get(cartasGraficas.size() - 1);
+    }
+}

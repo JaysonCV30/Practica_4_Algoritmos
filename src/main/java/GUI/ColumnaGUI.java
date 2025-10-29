@@ -4,8 +4,10 @@ import Logica.Columna;
 import Logica.Carta;
 import javafx.scene.layout.VBox;
 import java.util.ArrayList;
+import javafx.scene.layout.StackPane;
 
 public class ColumnaGUI extends VBox {
+
     private Columna columna;
     private ArrayList<CartaGUI> cartasGraficas;
 
@@ -21,10 +23,15 @@ public class ColumnaGUI extends VBox {
         cartasGraficas.clear();
 
         Carta[] cartas = obtenerCartas();
-        for (Carta carta : cartas) {
-            CartaGUI cartaGUI = new CartaGUI(carta);
-            cartasGraficas.add(cartaGUI);
-            getChildren().add(cartaGUI);
+        if (cartas.length == 0) {
+            // Si la columna está vacía, mostrar espacio visual
+            getChildren().add(crearEspacioVacioVisual());
+        } else {
+            for (Carta carta : cartas) {
+                CartaGUI cartaGUI = new CartaGUI(carta);
+                cartasGraficas.add(cartaGUI);
+                getChildren().add(cartaGUI);
+            }
         }
     }
 
@@ -43,17 +50,36 @@ public class ColumnaGUI extends VBox {
     }
 
     public CartaGUI getUltimaCartaGUI() {
-        if (cartasGraficas.isEmpty()) return null;
+        if (cartasGraficas.isEmpty()) {
+            return null;
+        }
         return cartasGraficas.get(cartasGraficas.size() - 1);
     }
 
     public void seleccionarUltimaCarta() {
         CartaGUI ultima = getUltimaCartaGUI();
-        if (ultima != null) ultima.seleccionar();
+        if (ultima != null) {
+            ultima.seleccionar();
+        }
     }
 
     public void deseleccionarUltimaCarta() {
         CartaGUI ultima = getUltimaCartaGUI();
-        if (ultima != null) ultima.deseleccionar();
+        if (ultima != null) {
+            ultima.deseleccionar();
+        }
+    }
+
+    private StackPane crearEspacioVacioVisual() {
+        javafx.scene.shape.Rectangle fondo = new javafx.scene.shape.Rectangle(100, 130);
+        fondo.setArcWidth(10);
+        fondo.setArcHeight(10);
+        fondo.setFill(javafx.scene.paint.Color.LIGHTGRAY.deriveColor(0, 1, 1, 0.3));
+        fondo.setStroke(javafx.scene.paint.Color.GRAY);
+        fondo.setStrokeWidth(1.5);
+
+        StackPane espacio = new StackPane(fondo);
+        espacio.setMouseTransparent(true);
+        return espacio;
     }
 }
