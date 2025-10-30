@@ -19,6 +19,7 @@ public class CartaGUI extends StackPane {
     private int origenIndex;
     private EightOffGameGUI controlador;
     private boolean seleccionada;
+    private boolean esPista = false;
 
     public CartaGUI(Carta carta, int origenIndex, EightOffGameGUI controlador) {
         this.carta = carta;
@@ -109,6 +110,16 @@ public class CartaGUI extends StackPane {
         shake.play();
     }
 
+    public void marcarComoPista() {
+        esPista = true;
+        setStyle("-fx-border-color: gold; -fx-border-width: 3; -fx-border-radius: 5;");
+    }
+
+    public void limpiarPista() {
+        esPista = false;
+        setStyle(""); 
+    }
+
     public void deseleccionar() {
         borde.setStroke(null);
     }
@@ -120,7 +131,7 @@ public class CartaGUI extends StackPane {
         if (url != null) {
             Image img = new Image(url.toExternalForm());
             imagen.setImage(img);
-            imagen.setOpacity(1.0); // restaurar opacidad si antes estaba tenue
+            imagen.setOpacity(1.0); // restaurar opacidad 
         } else {
             System.out.println("Imagen no encontrada al actualizar: " + nombreArchivo);
             imagen.setImage(null);

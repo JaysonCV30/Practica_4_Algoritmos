@@ -73,4 +73,18 @@ public class FundacionGUI extends StackPane {
         }
         return cartasGraficas.get(cartasGraficas.size() - 1);
     }
+
+    public void marcarSiContiene(Carta carta) {
+        for (CartaGUI cartaGUI : cartasGraficas) {
+            if (cartaGUI.getCarta().equals(carta)) {
+                cartaGUI.marcarComoPista();
+            }
+        }
+    }
+
+    public void limpiarPistas() {
+        for (CartaGUI cartaGUI : cartasGraficas) {
+            cartaGUI.limpiarPista();
+        }
+    }
 }

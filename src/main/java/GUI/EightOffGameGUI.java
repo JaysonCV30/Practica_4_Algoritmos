@@ -73,9 +73,12 @@ public class EightOffGameGUI extends BorderPane {
         });
 
         btnPista.setOnAction(e -> {
+            limpiarPistasVisuales();
+
             Carta pista = juego.darPista();
             if (pista != null) {
                 mensajeEstado.setText("Puedes mover: " + pista);
+                marcarCartaVisualmente(pista);
             } else {
                 mensajeEstado.setText("No hay movimientos válidos");
             }
@@ -160,5 +163,25 @@ public class EightOffGameGUI extends BorderPane {
 
     public boolean hayCartaSeleccionada() {
         return cartaSeleccionada != null && cartaGUISeleccionada != null;
+    }
+
+    private void marcarCartaVisualmente(Carta carta) {
+        for (ColumnaGUI colGUI : columnasGUI) {
+            colGUI.marcarSiContiene(carta);
+        }
+        celdaLibreGUI.marcarSiContiene(carta);
+        for (FundacionGUI fundGUI : fundacionesGUI) {
+            fundGUI.marcarSiContiene(carta);
+        }
+    }
+
+    private void limpiarPistasVisuales() {
+        for (ColumnaGUI colGUI : columnasGUI) {
+            colGUI.limpiarPistas();
+        }
+        celdaLibreGUI.limpiarPistas();
+        for (FundacionGUI fundGUI : fundacionesGUI) {
+            fundGUI.limpiarPistas();
+        }
     }
 }

@@ -74,4 +74,18 @@ public class CeldaLibreGUI extends HBox {
         StackPane espacio = new StackPane(fondo);
         return espacio;
     }
+
+    public void marcarSiContiene(Carta carta) {
+        for (CartaGUI cartaGUI : cartasGraficas) {
+            if (cartaGUI.getCarta().equals(carta)) {
+                cartaGUI.marcarComoPista();
+            }
+        }
+    }
+
+    public void limpiarPistas() {
+        for (CartaGUI cartaGUI : cartasGraficas) {
+            cartaGUI.limpiarPista();
+        }
+    }
 }

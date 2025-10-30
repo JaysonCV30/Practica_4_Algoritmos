@@ -42,9 +42,9 @@ public class Movimiento {
                 }
                 break;
             case CELDA_A_FUNDACION:
-                fund = (Fundacion) destino;
-                if (fund.verTope() != null && fund.verTope().equals(cartaMovida)) {
-                    fund.retirarCima();
+                Fundacion fundCelda = (Fundacion) destino;
+                if (fundCelda.verTope() != null && fundCelda.verTope().equals(cartaMovida)) {
+                    fundCelda.retirarCima();
                     ((CeldaLibre) origen).agregar(cartaMovida);
                 } else {
                     System.out.println("No se puede revertir: la carta ya no está en la cima de la fundación.");

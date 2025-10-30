@@ -88,4 +88,18 @@ public class ColumnaGUI extends VBox {
         espacio.setMouseTransparent(true);
         return espacio;
     }
+
+    public void marcarSiContiene(Carta carta) {
+        for (CartaGUI cartaGUI : cartasGraficas) {
+            if (cartaGUI.getCarta().equals(carta)) {
+                cartaGUI.marcarComoPista();
+            }
+        }
+    }
+
+    public void limpiarPistas() {
+        for (CartaGUI cartaGUI : cartasGraficas) {
+            cartaGUI.limpiarPista();
+        }
+    }
 }

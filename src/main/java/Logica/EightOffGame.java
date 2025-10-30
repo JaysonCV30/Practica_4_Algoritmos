@@ -290,7 +290,7 @@ public class EightOffGame {
     }
 
     public Carta darPista() {
-        // 1. Buscar As para iniciar fundación
+        // 1. Ases en columnas
         for (int i = 0; i < 8; i++) {
             Carta carta = columnas[i].verUltimaCarta();
             if (carta != null && carta.getValor() == 1) {
@@ -298,7 +298,15 @@ public class EightOffGame {
             }
         }
 
-        // 2. Buscar carta que pueda ir a fundación
+        // 2. Ases en celdas
+        for (int i = 0; i < celdas.contarCartas(); i++) {
+            Carta carta = celdas.ver(i);
+            if (carta != null && carta.getValor() == 1) {
+                return carta;
+            }
+        }
+
+        // 3. Columnas a fundación
         for (int i = 0; i < 8; i++) {
             Carta carta = columnas[i].verUltimaCarta();
             for (Fundacion f : fundaciones) {
@@ -308,7 +316,17 @@ public class EightOffGame {
             }
         }
 
-        // 3. Buscar carta que pueda moverse entre columnas
+        // 4. Celdas a fundación
+        for (int i = 0; i < celdas.contarCartas(); i++) {
+            Carta carta = celdas.ver(i);
+            for (Fundacion f : fundaciones) {
+                if (carta != null && f.puedeRecibir(carta)) {
+                    return carta;
+                }
+            }
+        }
+
+        // 5. Entre columnas
         for (int i = 0; i < 8; i++) {
             Carta carta = columnas[i].verUltimaCarta();
             for (int j = 0; j < 8; j++) {
@@ -318,11 +336,22 @@ public class EightOffGame {
             }
         }
 
-        // 4. Buscar carta que pueda ir a celda libre
-        for (int i = 0; i < 8; i++) {
-            Carta carta = columnas[i].verUltimaCarta();
-            if (carta != null && celdas.hayEspacio()) {
-                return carta;
+        // 6. Celdas a columnas
+        for (int i = 0; i < celdas.contarCartas(); i++) {
+            Carta carta = celdas.ver(i);
+            for (int j = 0; j < 8; j++) {
+                if (carta != null && columnas[j].puedeRecibir(carta)) {
+                    return carta;
+                }
+            }
+        }
+
+        // 7. Columnas a celda libre
+        if (celdas.hayEspacio()) {
+            for (int i = 0; i < 8; i++) {
+                if (columnas[i].verUltimaCarta() != null) {
+                    return columnas[i].verUltimaCarta();
+                }
             }
         }
 
