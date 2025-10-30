@@ -10,6 +10,7 @@ public class EightOffGame {
 
     public EightOffGame() {
         baraja = new Baraja();
+        baraja.mezclar();
         columnas = new Columna[8];
         for (int i = 0; i < 8; i++) {
             columnas[i] = new Columna();
@@ -24,11 +25,18 @@ public class EightOffGame {
     }
 
     private void repartirCartas() {
-        int columnaActual = 0;
-        while (!baraja.estaVacia()) {
+        // Reparte 6 cartas en cada una de las 8 columnas
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 6; j++) {
+                Carta carta = baraja.sacarCarta();
+                columnas[i].agregarCarta(carta);
+            }
+        }
+
+        // Las 4 cartas restantes van a las primeras 4 celdas libres
+        for (int i = 0; i < 4; i++) {
             Carta carta = baraja.sacarCarta();
-            columnas[columnaActual].agregarCarta(carta);
-            columnaActual = (columnaActual + 1) % 8;
+            celdas.agregar(carta);
         }
     }
 
@@ -249,18 +257,20 @@ public class EightOffGame {
     }
 
     public void deshacerUltimoMovimiento() {
-        Nodo<Movimiento> ultimo = historial.getInicio();
-        if (ultimo == null) {
+        if (historial.getInicio() == null) {
+            System.out.println("No hay movimientos para deshacer.");
             return;
         }
 
+        Nodo<Movimiento> actual = historial.getInicio();
         Nodo<Movimiento> anterior = null;
-        while (ultimo.getSig() != null) {
-            anterior = ultimo;
-            ultimo = ultimo.getSig();
+
+        while (actual.getSig() != null) {
+            anterior = actual;
+            actual = actual.getSig();
         }
 
-        Movimiento movimiento = ultimo.getInfo();
+        Movimiento movimiento = actual.getInfo();
         movimiento.revertir();
 
         if (anterior == null) {

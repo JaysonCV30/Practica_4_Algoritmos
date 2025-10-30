@@ -1,6 +1,7 @@
 package Logica;
 
 public class Lista<T> {
+
     private Nodo<T> inicio;
     private Nodo<T> fin;
 
@@ -16,8 +17,8 @@ public class Lista<T> {
             fin = nuevo;
         }
     }
-    
-    public Nodo<T> getInicio(){
+
+    public Nodo<T> getInicio() {
         return inicio;
     }
 
@@ -77,5 +78,36 @@ public class Lista<T> {
             pos++;
         }
         return -1;
+    }
+
+    public void eliminaEn(int posicion) {
+        if (inicio == null || posicion < 0) {
+            return;
+        }
+
+        if (posicion == 0) {
+            eliminaInicio();
+            return;
+        }
+
+        Nodo<T> actual = inicio;
+        Nodo<T> anterior = null;
+        int index = 0;
+
+        while (actual != null && index < posicion) {
+            anterior = actual;
+            actual = actual.getSig();
+            index++;
+        }
+
+        if (actual == null) {
+            return;
+        }
+
+        anterior.setSig(actual.getSig());
+
+        if (actual == fin) {
+            fin = anterior;
+        }
     }
 }

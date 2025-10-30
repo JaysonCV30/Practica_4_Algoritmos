@@ -8,7 +8,6 @@ public class Baraja {
     public Baraja(){
         cartas = new ListaCircularDoble<>();
         generarBaraja();
-        mezclar();
     }
     
     private void generarBaraja(){

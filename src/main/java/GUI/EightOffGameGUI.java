@@ -2,6 +2,7 @@ package GUI;
 
 import Logica.*;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -92,6 +93,18 @@ public class EightOffGameGUI extends BorderPane {
 
         if (juego.juegoTerminado()) {
             mensajeEstado.setText("¡Juego terminado! Has ganado.");
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setTitle("¡Juego terminado!");
+            alerta.setHeaderText(null);
+            alerta.setContentText("¡Felicidades! Has ganado la partida.");
+            alerta.showAndWait();
+        } else if (juego.darPista() == null) {
+            mensajeEstado.setText("No hay movimientos válidos.");
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setTitle("Sin movimientos");
+            alerta.setHeaderText(null);
+            alerta.setContentText("No hay movimientos válidos disponibles.");
+            alerta.showAndWait();
         }
     }
 
@@ -117,7 +130,7 @@ public class EightOffGameGUI extends BorderPane {
         }
 
         if (destino == origenSeleccionado) {
-            mensajeEstado.setText("Selecciona una pila diferente para mover la carta.");
+            mensajeEstado.setText("Mover la carta.");
             return;
         }
 

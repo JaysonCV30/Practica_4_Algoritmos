@@ -37,29 +37,9 @@ public class CeldaLibre {
             return null;
         }
 
-        Nodo<Carta> actual = celdas.getInicio();
-        Nodo<Carta> anterior = null;
-        int index = 0;
-
-        while (actual != null) {
-            if (index == posicion) {
-                Carta carta = actual.getInfo();
-                if (anterior == null) {
-                    celdas.eliminaInicio();
-                } else {
-                    anterior.setSig(actual.getSig());
-                    if (actual.getSig() == null) {
-                        // era el último
-                        celdas.eliminaFinal();
-                    }
-                }
-                return carta;
-            }
-            anterior = actual;
-            actual = actual.getSig();
-            index++;
-        }
-        return null;
+        Carta carta = ver(posicion); 
+        celdas.eliminaEn(posicion);  
+        return carta;
     }
 
     public int contarCartas() {
